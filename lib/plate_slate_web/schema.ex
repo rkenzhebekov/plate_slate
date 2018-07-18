@@ -62,6 +62,15 @@ defmodule PlateSlateWeb.Schema do
 
       resolve &Resolvers.Menu.menu_items/3
     end
+
+    @desc "The list of categories"
+    field :categories, list_of(:category) do
+
+      arg :matching, :string
+      arg :order, type: :sort_order, default_value: :asc
+
+      resolve &Resolvers.Menu.menu_categories/3
+    end
   end
 
 
@@ -70,5 +79,11 @@ defmodule PlateSlateWeb.Schema do
     field :name, :string
     field :description, :string
     field :added_on, :date
+  end
+
+  object :category do
+    field :id, :id
+    field :name, :string
+    field :description, :string
   end
 end

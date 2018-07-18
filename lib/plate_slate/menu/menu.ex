@@ -198,6 +198,19 @@ defmodule PlateSlate.Menu do
     Item.changeset(item, %{})
   end
 
+  def list_categories(filters) do
+    filters
+    |> Enum.reduce(Category, fn
+      {_, nil}, query ->
+        query
+      {:order, order}, query ->
+        from q in query, order_by: {^order, :name}
+      {:matching, name}, query ->
+        from q in query, where: ilike(q.name, ^"%#{name}%")
+    end)
+    |> Repo.all
+  end
+
   def list_items(args) do
     IO.puts "These are our arguments: #{inspect(args)}"
 
