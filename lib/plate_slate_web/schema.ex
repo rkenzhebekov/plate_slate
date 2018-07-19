@@ -36,12 +36,11 @@ defmodule PlateSlateWeb.Schema do
 
       resolve &Resolvers.Menu.menu_categories/3
     end
+
+    field :search, list_of(:search_result) do
+      arg :matching, non_null(:string)
+      resolve &Resolvers.Menu.search/3
+    end
   end
 
-
-  object :category do
-    field :id, :id
-    field :name, :string
-    field :description, :string
-  end
 end

@@ -28,6 +28,7 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
   end
 
   object :menu_item do
+    interfaces [:search_result]
     field :id, :id
     field :name, :string
     field :description, :string
@@ -42,6 +43,29 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
       arg :order, type: :sort_order, default_value: :asc
 
       resolve &Resolvers.Menu.menu_items/3
+    end
+  end
+
+  object :category do
+    interfaces [:search_result]
+    field :id, :id
+    field :name, :string
+    field :description, :string
+    field :items, list_of(:menu_item) do
+      resolve &Resolvers.Menu.items_for_category/3
+    end
+  end
+
+  interface :search_result do
+    field :name, :string
+
+    resolve_type fn
+      %PlateSlate.Menu.Item{}, _ ->
+        :menu_item
+      %PlateSlate.Menu.Category{}, _ ->
+        :category
+      _, _ ->
+        nil
     end
   end
 
