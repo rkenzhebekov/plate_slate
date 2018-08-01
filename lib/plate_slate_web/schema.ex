@@ -3,6 +3,7 @@ defmodule PlateSlateWeb.Schema do
 
   alias PlateSlateWeb.Resolvers
   import_types __MODULE__.MenuTypes
+  import_types __MODULE__.OrderingTypes
 
   enum :sort_order do
     value :asc
@@ -72,6 +73,18 @@ defmodule PlateSlateWeb.Schema do
       arg :id, non_null(:id)
       resolve &Resolvers.Menu.update_item/3
     end
+
+    field :place_order, :order_result do
+      arg :input, non_null(:place_order_input)
+      resolve &Resolvers.Ordering.place_order/3
+    end
   end
 
+  subscription do
+    field :new_order, :order do
+      config fn _args, _info ->
+        {:ok, topic: "*"}
+      end
+    end
+  end
 end
