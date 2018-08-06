@@ -7,6 +7,12 @@ defmodule PlateSlateWeb.Schema do
   import_types __MODULE__.MenuTypes
   import_types __MODULE__.OrderingTypes
 
+  def middleware(middleware, field, %{identifier: :allergy_info} = object) do
+    new_middleware = {Absinthe.Middleware.MapGet, to_string(field.identifier)}
+    middleware
+    |> Absinthe.Schema.replace_default(new_middleware, field, object)
+  end
+
   def middleware(middleware, _field, %{identifier: :mutation}) do
     middleware ++ [Middleware.ChangesetErrors]
   end
