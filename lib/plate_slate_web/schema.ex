@@ -55,6 +55,11 @@ defmodule PlateSlateWeb.Schema do
 
 
   query do
+    field :me, :user do
+      middleware Middleware.Authorize, :any
+      resolve &Resolvers.Accounts.me/3
+    end
+
     import_fields :menu_queries
 
     @desc "The list of categories"
