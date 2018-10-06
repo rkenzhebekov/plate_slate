@@ -52,6 +52,7 @@ defmodule PlateSlate.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:absinthe, "~> 1.4.2"},
+      #{:absinthe, "~> 1.4.13"},
       {:absinthe_plug, "~> 1.4.0"},
       {:absinthe_phoenix, "~> 1.4.0"},
       {:absinthe_relay, "~> 1.4.0"},

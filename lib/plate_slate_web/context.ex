@@ -6,7 +6,7 @@ defmodule PlateSlateWeb.Context do
 
   def call(conn, _) do
     context = build_context(conn)
-    IO.inspect [context: context]
+    # IO.inspect [context: context]
 
     Absinthe.Plug.put_options(conn, context: context)
   end
