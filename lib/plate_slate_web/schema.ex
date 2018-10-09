@@ -8,17 +8,30 @@ defmodule PlateSlateWeb.Schema do
   import_types __MODULE__.OrderingTypes
   import_types __MODULE__.AccountsTypes
 
-  def middleware(middleware, field, %{identifier: :allergy_info} = object) do
-    new_middleware = {Absinthe.Middleware.MapGet, to_string(field.identifier)}
+  def middleware(middleware, field, object) do
     middleware
-    |> Absinthe.Schema.replace_default(new_middleware, field, object)
+    |> apply(:errors, field, object)
+    |> apply(:get_string, field, object)
+    |> apply(:debug, field, object)
   end
 
-  def middleware(middleware, _field, %{identifier: :mutation}) do
+  defp apply(middleware, :errors, _field, %{identifier: :mutation}) do
     middleware ++ [Middleware.ChangesetErrors]
   end
 
-  def middleware(middleware, _field, _object) do
+  defp apply([], :get_string, field, %{identifier: :allergy_info}) do
+    [{Absinthe.Middleware.MapGet, to_string(field.identifier)}]
+  end
+
+  defp apply(middleware, :debug, _field, _object) do
+    if System.get_env("DEBUG") do
+      [{Middleware.Debug, :start}] ++ middleware
+    else
+      middleware
+    end
+  end
+
+  defp apply(middleware, _, _, _) do
     middleware
   end
 
